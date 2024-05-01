@@ -3,8 +3,27 @@
     <head>
         <meta charset="utf-8" />
         <title>ASCII Engine</title>
+        <script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
+        <script src="https://webglfundamentals.org/webgl/resources/m4.js"></script>
         <script src="ascii-engine.js"></script>
         <link rel="stylesheet" href="style.css">
+
+        <script id="b-shader" type="x-shader/x-fragment">
+            void main() {
+                gl_FragColor = vec4(0.3843, 0, 0, 0);
+            }
+        </script>
+        <script id="vertex-shader" type="x-shader/x-vertex">
+            attribute vec4 a_position;
+            uniform mat4 u_matrix;
+            
+            void main() {
+                // Multiply the position by the matrix.
+                gl_Position = u_matrix * a_position;
+            }
+        </script>
+
+        </script>
       </head>
     
       <body>
