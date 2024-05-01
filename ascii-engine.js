@@ -72,7 +72,7 @@ window.onload = function() {
 
         pixels_depadded = pixels_depadded.slice(0, write_index);
 
-        ascii_canvas.value = decoder.decode(pixels_depadded);
+        ascii_canvas.innerText = decoder.decode(pixels_depadded);
     
         requestAnimationFrame(DrawScene);
     }
