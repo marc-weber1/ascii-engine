@@ -1,10 +1,10 @@
-const width = 40;
-const height = 20;
+const width = 140;
+const height = 35;
 
 let decoder = new TextDecoder("utf-8");
 
 window.onload = function() {
-    const canvas = document.getElementById("glcanvas");
+    const canvas = document.createElement('canvas');
     const ascii_canvas = document.getElementById("ascii-canvas");
     
     // Initialize the GL context
@@ -44,12 +44,11 @@ window.onload = function() {
     gl.framebufferTexture2D(
         gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
 
+    init(gl);
 
-    function DrawScene()
+    function DrawScene(time)
     {
-        // Test by drawing lowercase a
-        gl.clearColor(0.38, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        draw(gl, time);
 
         let pixels = new Uint8Array(width * height * 4);
         gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
@@ -79,4 +78,15 @@ window.onload = function() {
     }
 
     requestAnimationFrame(DrawScene);
+}
+
+
+function init(gl){
+
+}
+
+function draw(gl, time){
+    // Test by drawing lowercase a
+    gl.clearColor(0.38, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
 }
