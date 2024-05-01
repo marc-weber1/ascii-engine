@@ -1,8 +1,11 @@
 const width = 40;
-const height = 40;
+const height = 20;
+
+let decoder = new TextDecoder("utf-8");
 
 window.onload = function() {
     const canvas = document.getElementById("glcanvas");
+    const ascii_canvas = document.getElementById("ascii-canvas");
     
     // Initialize the GL context
     const gl = canvas.getContext("webgl");
@@ -44,17 +47,36 @@ window.onload = function() {
 
     function DrawScene()
     {
-        var pixels = new Uint8Array(width * height * 4);
+        // Test by drawing lowercase a
+        gl.clearColor(0.38, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        let pixels = new Uint8Array(width * height * 4);
         gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
     
-        console.log(pixels[0]);
+        // Convert e.g. 0x60 0x00 0x00 0x00 into just 0x60
+        let pixels_depadded = new Uint8Array(width * height * 4 + height); // + height for newlines
+        let write_index = 0;
+        for(p = 0; p < width * height; p++){
+            if(p != 0 && p % width == 0){
+                pixels_depadded[write_index] = 0xA; write_index++; //newline
+            }
+
+            pixels_depadded[write_index] = pixels[4*p]; write_index++;
+            if(pixels[4*p+1] == 0x0) continue;
+            pixels_depadded[write_index] = pixels[4*p+1]; write_index++;
+            if(pixels[4*p+2] == 0x0) continue;
+            pixels_depadded[write_index] = pixels[4*p+2]; write_index++;
+            if(pixels[4*p+3] == 0x0) continue;
+            pixels_depadded[write_index] = pixels[4*p+3]; write_index++;
+        }
+
+        pixels_depadded = pixels_depadded.slice(0, write_index);
+
+        ascii_canvas.value = decoder.decode(pixels_depadded);
     
         requestAnimationFrame(DrawScene);
     }
 
     requestAnimationFrame(DrawScene);
-
-    // Test by drawing lowercase a
-    gl.clearColor(0.38, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
 }
