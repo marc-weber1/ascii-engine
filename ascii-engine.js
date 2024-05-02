@@ -3,44 +3,15 @@ import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js'
 const width = 80;
 const height = 35;
 
-let decoder = new TextDecoder("utf-8");
-
 window.onload = function() {
-    const canvas = document.createElement('canvas');
+    const decoder = new TextDecoder("utf-8");
     const ascii_canvas = document.getElementById("ascii-canvas");
 
-    const renderer = new THREE.WebGLRenderer({canvas: canvas, preserveDrawingBuffer: true});
-
+    const renderer = new THREE.WebGLRenderer();
     renderer.setSize( width, height );
 
-    var gl = renderer.getContext();
-
-    const targetTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, targetTexture);
-
-    {
-        // define size and format of level 0
-        const level = 0;
-        const internalFormat = gl.RGBA;
-        const border = 0;
-        const format = gl.RGBA;
-        const type = gl.UNSIGNED_BYTE;
-        const data = null;
-        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                    width, height, border,
-                    format, type, data);
-    }
-
-    // Create and bind the framebuffer
-    const fb = gl.createFramebuffer();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    const gl = renderer.getContext();
     
-    // attach the texture as the first color attachment
-    const attachmentPoint = gl.COLOR_ATTACHMENT0;
-    const level = 0;
-    gl.framebufferTexture2D(
-        gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
-
     init(renderer);
 
     function DrawScene(time)
