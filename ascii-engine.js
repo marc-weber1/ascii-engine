@@ -4,7 +4,7 @@ const width = 80;
 const height = 35;
 
 window.onload = function() {
-    const decoder = new TextDecoder("utf-8");
+    const decoder = new TextDecoder();
     const ascii_canvas = document.getElementById("ascii-canvas");
 
     const renderer = new THREE.WebGLRenderer();
@@ -34,8 +34,6 @@ window.onload = function() {
             pixels_depadded[write_index] = pixels[4*p+1]; write_index++;
             if(pixels[4*p+2] == 0x0) continue;
             pixels_depadded[write_index] = pixels[4*p+2]; write_index++;
-            if(pixels[4*p+3] == 0x0) continue;
-            pixels_depadded[write_index] = pixels[4*p+3]; write_index++;
         }
 
         pixels_depadded = pixels_depadded.slice(0, write_index);
