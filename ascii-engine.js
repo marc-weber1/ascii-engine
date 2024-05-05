@@ -29,11 +29,9 @@ function renderAsText(renderer, htmlElement, width, height){
 }
 
 function characterTexture(text){ // -> three.js Texture
-    const texture = new THREE.DataTexture({
-        data: new Uint8Array([0x61, 0x00, 0x00, 0x00]),
-        width: 1,
-        height: 1
-    });
+    const texture = new THREE.DataTexture(new Uint8Array([0x61, 0x00, 0x00, 0x00]), 1, 1);
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
     texture.needsUpdate = true;
     return texture;
 }
