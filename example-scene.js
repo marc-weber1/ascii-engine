@@ -31,9 +31,11 @@ function init(renderer){
     camera = new THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 );
 
     const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    const material = new THREE.MeshPhongMaterial();
+    const material = new THREE.MeshPhongMaterial({
+        color: 0xFFFFFF
+    });
 
-    material.userData.brightnessTextMap = { type: "t", value: ascii.characterTexture(document.getElementById('brightness-texture').innerText) };
+    material.userData.brightnessTextMap = { type: "t", value: ascii.characterTexture("`.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@") };
 
     material.onBeforeCompile = function(shader){
         shader.uniforms.brightnessTextMap = material.userData.brightnessTextMap;
@@ -51,12 +53,12 @@ function init(renderer){
     scene.add( cube );
 
     const light = new THREE.PointLight( 0xffffff, 1, 100 );
-    light.position.set( 50, 50, 50 );
+    light.position.set( 10, 10, 10 );
     scene.add( light );
 
     camera.position.z = 2;
 
-    renderer.setClearColor(0x630000);
+    renderer.setClearColor(0x2E0000);
 }
 
 function draw(renderer, time){
