@@ -35,19 +35,7 @@ function init(renderer){
         color: 0xFFFFFF
     });
 
-    material.userData.brightnessTextMap = { type: "t", value: ascii.characterTexture("`.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@") };
-
-    material.onBeforeCompile = function(shader){
-        shader.uniforms.brightnessTextMap = material.userData.brightnessTextMap;
-
-        shader.fragmentShader = 'uniform sampler2D brightnessTextMap;\n' + shader.fragmentShader;
-        shader.fragmentShader = shader.fragmentShader.replace(/gl_FragColor = ([^;]*);/, `
-            vec4 final_colour = $1;
-            gl_FragColor = texture(brightnessTextMap, vec2(final_colour.r, 0));
-        `);
-
-        console.log(shader.fragmentShader);
-    }
+    ascii.patchMaterialWithBrightnessMap(material, "`.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@");
 
     cube = new THREE.Mesh( geometry, material );
     scene.add( cube );

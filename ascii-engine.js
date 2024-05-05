@@ -44,4 +44,23 @@ function characterTexture(text){ // -> three.js Texture
     return texture;
 }
 
-export { renderAsText, characterTexture }
+function patchMaterialWithBrightnessMap(material, map){
+    material.userData.brightnessTextMap = {
+        type: "t",
+        value: characterTexture(map)
+    }
+
+    material.onBeforeCompile = function(shader){
+        shader.uniforms.brightnessTextMap = material.userData.brightnessTextMap;
+
+        shader.fragmentShader = 'uniform sampler2D brightnessTextMap;\n' + shader.fragmentShader;
+        shader.fragmentShader = shader.fragmentShader.replace(/gl_FragColor = ([^;]*);/, `
+            vec4 final_colour = $1;
+            gl_FragColor = texture(brightnessTextMap, vec2(final_colour.r, 0));
+        `);
+
+        console.log(shader.fragmentShader);
+    }
+}
+
+export { renderAsText, characterTexture, patchMaterialWithBrightnessMap }
