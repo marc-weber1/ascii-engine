@@ -58,8 +58,6 @@ function patchMaterialWithBrightnessMap(material, map){
             vec4 final_colour = $1;
             gl_FragColor = texture(brightnessTextMap, vec2(final_colour.r, 0));
         `);
-
-        console.log(shader.fragmentShader);
     }
 }
 

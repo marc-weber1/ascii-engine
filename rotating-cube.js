@@ -1,7 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js'
 import * as ascii from './ascii-engine.js';
 
-const width = 80;
+const width = 60;
 const height = 35;
 
 window.onload = function() {
