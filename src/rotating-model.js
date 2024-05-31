@@ -5,13 +5,13 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 const width = 60;
 const height = 25;
 
-window.onload = function() {
+window.onload = async function() {
     const ascii_canvas = document.getElementById("ascii-canvas");
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize( width, height );
     
-    init(renderer);
+    await init(renderer);
 
     function DrawScene(time)
     {
@@ -27,7 +27,7 @@ window.onload = function() {
 
 let scene, camera, model;
 
-function init(renderer){
+async function init(renderer){
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 );
     camera.position.z = 30;
@@ -36,18 +36,12 @@ function init(renderer){
     renderer.setClearColor(0x2E0000);
 
     const loader = new FBXLoader();
-    loader.load('snowy/Snowy Final.fbx', (object) => {
-        model = object;
-        model.rotation.x = 3.14;
-
-        scene.add(model);
-    },
-    (xhr) => {
+    model = await loader.loadAsync('snowy/Snowy Final.fbx', (xhr) => {
         console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-    },
-    (error) => {
-        console.log(error);
     });
+    model.rotation.x = 3.14;
+
+    scene.add(model);
 }
 
 function draw(renderer, time){
