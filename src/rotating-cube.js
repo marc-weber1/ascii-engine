@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js'
+import * as THREE from 'three';
 import * as ascii from './ascii-engine.js';
 
 const width = 60;
@@ -40,8 +40,8 @@ function init(renderer){
     cube = new THREE.Mesh( geometry, material );
     scene.add( cube );
 
-    const light = new THREE.PointLight( 0xffffff, 1, 100 );
-    light.position.set( 10, 10, 10 );
+    const light = new THREE.PointLight( 0xffffff );
+    light.position.set( 2, 2, 2 );
     scene.add( light );
 
     camera.position.z = 2;

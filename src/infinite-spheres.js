@@ -1,4 +1,4 @@
-import * as THREE from './three.module.js'
+import * as THREE from 'three'
 import * as ascii from './ascii-engine.js';
 
 const width = 150;

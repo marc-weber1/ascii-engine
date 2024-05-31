@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js'
+import * as THREE from 'three';
 
 const decoder = new TextDecoder();
 
@@ -54,10 +54,12 @@ function patchMaterialWithBrightnessMap(material, map){
         shader.uniforms.brightnessTextMap = material.userData.brightnessTextMap;
 
         shader.fragmentShader = 'uniform sampler2D brightnessTextMap;\n' + shader.fragmentShader;
-        shader.fragmentShader = shader.fragmentShader.replace(/gl_FragColor = ([^;]*);/, `
-            vec4 final_colour = $1;
-            gl_FragColor = texture(brightnessTextMap, vec2(final_colour.r, 0));
+        shader.fragmentShader = shader.fragmentShader.replace(/}\s*$/, `
+            gl_FragColor = texture(brightnessTextMap, vec2(gl_FragColor.r, 0));
+        }
         `);
+
+        console.log(shader.fragmentShader);
     }
 }
 

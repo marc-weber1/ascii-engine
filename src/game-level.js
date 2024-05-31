@@ -1,9 +1,9 @@
-import * as THREE from 'https://unpkg.com/three@0.122.0/build/three.module.js'
+import * as THREE from 'three'
 import * as ascii from './ascii-engine.js';
-import { FBXLoader } from './loaders/FBXLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const width = 60;
-const height = 25;
+const height = 35;
 
 window.onload = function() {
     const ascii_canvas = document.getElementById("ascii-canvas");
@@ -25,7 +25,7 @@ window.onload = function() {
 }
 
 
-let scene, camera, model;
+let scene, camera, gltf_scene;
 
 function init(renderer){
     scene = new THREE.Scene();
@@ -35,24 +35,9 @@ function init(renderer){
 
     renderer.setClearColor(0x2E0000);
 
-    const loader = new FBXLoader();
-    loader.load('snowy/Snowy Final.fbx', (object) => {
-        model = object;
-        model.rotation.x = 3.14;
-
-        scene.add(model);
-    },
-    (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-    },
-    (error) => {
-        console.log(error);
-    });
+    const loader = new GLTFLoader();
 }
 
 function draw(renderer, time){
-    if(model)
-        model.rotation.y += 0.01;
-
     renderer.render( scene, camera );
 }
