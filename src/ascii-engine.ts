@@ -1,8 +1,10 @@
 import * as THREE from 'three';
+import * as CANNON from 'cannon'
+import { GLTF } from 'three/examples/jsm/Addons.js';
 
 const decoder = new TextDecoder();
 
-function renderAsText(renderer, htmlElement, width, height){
+function renderAsText(renderer: THREE.WebGLRenderer, htmlElement: HTMLElement, width: number, height: number){
     const glContext = renderer.getContext();
 
     let pixels = new Uint8Array(width * height * 4);
@@ -28,7 +30,7 @@ function renderAsText(renderer, htmlElement, width, height){
     htmlElement.innerText = decoder.decode(pixels_depadded);
 }
 
-function characterTexture(text){ // -> three.js Texture
+function characterTexture(text: string) : THREE.Texture{
     const data = new Uint8Array(4 * text.length);
     for (let i = 0; i < text.length; i++) {
         const charBytes = text.charCodeAt(i);
@@ -44,7 +46,7 @@ function characterTexture(text){ // -> three.js Texture
     return texture;
 }
 
-function patchMaterialWithBrightnessMap(material, map){
+function patchMaterialWithBrightnessMap(material : THREE.Material, map: string){
     material.userData.brightnessTextMap = {
         type: "t",
         value: characterTexture(map)
@@ -63,4 +65,29 @@ function patchMaterialWithBrightnessMap(material, map){
     }
 }
 
-export { renderAsText, characterTexture, patchMaterialWithBrightnessMap }
+function loadOMICollidersRecursive(object: THREE.Object3D) : CANNON.Body[]{
+    let bodies: CANNON.Body[] = [];
+
+    if(object.userData.gltfExtensions?.OMI_physics_body){
+        console.log(object);
+    }
+
+    for(let child of object.children){
+        bodies.concat(loadOMICollidersRecursive(child));
+    }
+
+    return bodies;
+}
+
+function loadGLTFOMIColliders(gltf: GLTF) : CANNON.World{
+    let bodies = loadOMICollidersRecursive(gltf.scene);
+    let world = new CANNON.World();
+
+    for(let body of bodies){
+        world.addBody(body);
+    }
+
+    return world;
+}
+
+export { renderAsText, characterTexture, patchMaterialWithBrightnessMap, loadGLTFOMIColliders }

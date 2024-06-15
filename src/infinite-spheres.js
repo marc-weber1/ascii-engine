@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import * as ascii from './ascii-engine.js';
+import * as ascii from './ascii-engine.ts';
 
 const width = 150;
 const height = 100;

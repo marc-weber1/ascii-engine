@@ -10,10 +10,12 @@
   },
   "devDependencies": {
     "@types/three": "^0.164.1",
+    "@types/cannon": "^0.1.12",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   },
   "dependencies": {
+    "cannon": "^0.6.2",
     "three": "^0.164.1"
   }
 }

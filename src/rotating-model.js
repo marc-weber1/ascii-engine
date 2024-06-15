@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import * as ascii from './ascii-engine.js';
+import * as ascii from './ascii-engine.ts';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
 const width = 60;

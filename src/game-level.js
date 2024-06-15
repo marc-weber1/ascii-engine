@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import * as ascii from './ascii-engine.js';
+import * as ascii from './ascii-engine.ts';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const width = 100;
@@ -36,7 +36,8 @@ async function init(renderer){
     renderer.setClearColor(0x2E0000);
 
     const loader = new GLTFLoader();
-    await loader.loadAsync('test_colliders.gltf');
+    gltf_scene = await loader.loadAsync('test_colliders.gltf');
+    const cannon_world = ascii.loadGLTFOMIColliders(gltf_scene);
 }
 
 function draw(renderer, time){
