@@ -1,6 +1,4 @@
 import * as THREE from 'three';
-import * as CANNON from 'cannon'
-import { GLTF } from 'three/examples/jsm/Addons.js';
 
 const decoder = new TextDecoder();
 
@@ -65,63 +63,4 @@ function patchMaterialWithBrightnessMap(material : THREE.Material, map: string){
     }
 }
 
-function posConvert(pos: THREE.Vector3): CANNON.Vec3 {
-    return new CANNON.Vec3(pos.x, pos.y, pos.z);
-}
-
-function quatConvert(q: THREE.Quaternion): CANNON.Quaternion{
-    return new CANNON.Quaternion(q.x, q.y, q.z, q.w);
-}
-
-function loadOMICollidersRecursive(object: THREE.Object3D, shapes) : CANNON.Body[]{
-    let bodies: CANNON.Body[] = [];
-
-    if(object.userData.gltfExtensions?.OMI_physics_body){
-        const omi_body = object.userData.gltfExtensions?.OMI_physics_body;
-        
-        let body = new CANNON.Body({
-            position: posConvert(object.getWorldPosition(object.position)),
-            quaternion: quatConvert(object.getWorldQuaternion(object.quaternion))
-        });
-
-        let shape_index = omi_body.collider?.shape;
-        if(!shape_index){
-            shape_index = object.children[0]?.userData.gltfExtensions?.OMI_physics_body?.collider?.shape;
-        }
-        body.addShape(shapes[shape_index]);
-
-        if(omi_body.motion?.type == "static"){
-            body.type = CANNON.Body.STATIC;
-        }
-    }
-    else{
-        for(let child of object.children){
-            bodies.concat(loadOMICollidersRecursive(child, shapes));
-        }
-    }
-
-    return bodies;
-}
-
-function loadGLTFOMIColliders(gltf: GLTF) : CANNON.World{
-
-    let shapes = [];
-    for(const s of gltf.userData?.gltfExtensions?.OMI_physics_shape.shapes){
-        switch(s.type){
-            case "box":
-                shapes.push(new CANNON.Box(new CANNON.Vec3(s.box.size[0], s.box.size[1], s.box.size[2])));
-                break;
-        }
-    }
-
-    const bodies = loadOMICollidersRecursive(gltf.scene, shapes);
-    const world = new CANNON.World();
-
-    for(const body of bodies){
-        world.addBody(body);
-    }
-
-    return world;
-}
-
-export { renderAsText, characterTexture, patchMaterialWithBrightnessMap, loadGLTFOMIColliders }
+export { renderAsText, characterTexture, patchMaterialWithBrightnessMap }
