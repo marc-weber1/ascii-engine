@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as CANNON from 'cannon'
+import * as CANNON from 'cannon';
 import { GLTF } from 'three/examples/jsm/Addons.js';
 
 
@@ -59,25 +59,40 @@ function loadOMICollidersRecursive(object: THREE.Object3D, shapes) : CANNON.Body
         if(omi_body.motion?.type == "static"){
             body.type = CANNON.Body.STATIC;
         }
+
+        bodies.push(body);
     }
     else{
         for(let child of object.children){
-            bodies.concat(loadOMICollidersRecursive(child, shapes));
+            bodies = bodies.concat(loadOMICollidersRecursive(child, shapes));
         }
     }
 
     return bodies;
 }
 
-function loadGLTFOMIColliders(gltf: GLTF) : CANNON.World{
+function loadGLTFOMIColliders(gltf: GLTF) : CANNON.Body[]{
     const bodies = loadOMICollidersRecursive(gltf.scene, gltf.userData?.gltfExtensions?.OMI_physics_shape.shapes);
-    const world = new CANNON.World();
-
-    for(const body of bodies){
-        world.addBody(body);
-    }
-
-    return world;
+    return bodies;
 }
 
-export { loadGLTFOMIColliders }
+function loadSpawnPointsRecursive(object: THREE.Object3D): CANNON.Vec3[]{
+    let points: CANNON.Vec3[] = [];
+
+    if(object.userData.gltfExtensions?.OMI_spawn_point){
+        const pos = object.getWorldPosition(object.position);
+        points.push(posConvert(pos));
+    }
+
+    for(let child of object.children){
+        points = points.concat(loadSpawnPointsRecursive(child));
+    }
+
+    return points
+}
+
+function loadGLTFOMISpawnPoints(gltf: GLTF): CANNON.Vec3[]{
+    return loadSpawnPointsRecursive(gltf.scene);
+} 
+
+export { loadGLTFOMIColliders, loadGLTFOMISpawnPoints }
